@@ -1,0 +1,83 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f5f7fb;
+  color: #222;
+}
+
+.navbar {
+  background: royalblue;
+  color: white;
+  padding: 1rem;
+}
+
+.navbar h1 {
+  margin: 0 0 0.75rem 0;
+  font-size: 1.5rem;
+}
+
+.nav-links {
+  list-style: none;
+  display: flex;
+  gap: 1rem;
+  padding: 0;
+  margin: 0;
+}
+
+.nav-links a {
+  color: white;
+  text-decoration: none;
+}
+
+.page-content {
+  padding: 1.5rem;
+}
+
+
+/* event form styles */
+.event-form-section {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 1.5rem;
+  background: #ffffff;
+  border-radius: 12px;
+}
+
+.event-form {
+  display: grid;
+  gap: 1rem;
+}
+
+.event-form label {
+  display: grid;
+  gap: 0.4rem;
+  font-weight: 600;
+}
+
+.event-form input,
+.event-form textarea,
+.event-form select {
+  padding: 0.75rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  font: inherit;
+}
+
+.event-form button {
+  background: royalblue;
+  color: white;
+  border: none;
+  padding: 0.85rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.event-form button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.form-message {
+  margin-top: 1rem;
+  font-weight: 600;
+}
