@@ -4,7 +4,7 @@ function Layout() {
   return (
     <>
       <nav className="navbar">
-        <h1>Crossroads Announcements</h1>
+        <h1>Crossroads Ward Announcements</h1>
         <ul className="nav-links">
           <li><Link to="/">Home</Link></li>
           <li><Link to="/contact">Contact</Link></li>

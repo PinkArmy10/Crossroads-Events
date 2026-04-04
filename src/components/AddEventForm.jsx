@@ -13,6 +13,18 @@ function generateCode() {
   return code;
 }
 
+function isValidEmail(email) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
+
+function cleanPhone(phone) {
+  return phone.replace(/\D/g, "");
+}
+
+function isValidPhone(phone) {
+  return cleanPhone(phone).length === 10;
+}
+
 function AddEventForm() {
   const [formData, setFormData] = useState({
     title: "",
@@ -23,7 +35,7 @@ function AddEventForm() {
     postedByName: "",
     postedByEmail: "",
     postedByPhone: "",
-    group: "Ward"
+    group: "Ward",
   });
 
   const [message, setMessage] = useState("");
@@ -33,7 +45,7 @@ function AddEventForm() {
     const { name, value } = event.target;
     setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   }
 
@@ -42,29 +54,57 @@ function AddEventForm() {
     setIsSubmitting(true);
     setMessage("");
 
+    const trimmedTitle = formData.title.trim();
+    const trimmedLocation = formData.location.trim();
+    const trimmedDescription = formData.description.trim();
+    const trimmedPostedByName = formData.postedByName.trim();
+    const trimmedEmail = formData.postedByEmail.trim();
+    const trimmedPhone = formData.postedByPhone.trim();
+    const cleanedPhone = cleanPhone(trimmedPhone);
+
+    if (!isValidEmail(trimmedEmail)) {
+      setMessage("Please enter a valid email address.");
+      setIsSubmitting(false);
+      return;
+    }
+
+    if (!isValidPhone(trimmedPhone)) {
+      setMessage("Please enter a valid 10-digit phone number.");
+      setIsSubmitting(false);
+      return;
+    }
+
+    if (new Date(formData.endDateTime) <= new Date(formData.startDateTime)) {
+      setMessage("End date and time must be after the start date and time.");
+      setIsSubmitting(false);
+      return;
+    }
+
     try {
       const eventCode = generateCode();
 
       await addDoc(collection(db, "events"), {
         code: eventCode,
-        title: formData.title.trim(),
-        location: formData.location.trim(),
+        title: trimmedTitle,
+        location: trimmedLocation,
         startDateTime: formData.startDateTime,
         endDateTime: formData.endDateTime,
-        description: formData.description.trim(),
+        description: trimmedDescription,
         group: formData.group,
         postedBy: {
-          name: formData.postedByName.trim(),
-          email: formData.postedByEmail.trim(),
-          phone: formData.postedByPhone.trim()
+          name: trimmedPostedByName,
+          email: trimmedEmail,
+          phone: cleanedPhone,
         },
         status: "pending",
         approved: false,
         published: false,
-        createdAt: serverTimestamp()
+        createdAt: serverTimestamp(),
       });
 
-      setMessage(`Event submitted successfully. Your lookup code is ${eventCode}.`);
+      setMessage(
+        `Event submitted successfully. Your lookup code is ${eventCode}.`
+      );
 
       setFormData({
         title: "",
@@ -75,7 +115,7 @@ function AddEventForm() {
         postedByName: "",
         postedByEmail: "",
         postedByPhone: "",
-        group: "Ward"
+        group: "Ward",
       });
     } catch (error) {
       console.error("Error adding event:", error);
@@ -163,6 +203,7 @@ function AddEventForm() {
             name="postedByEmail"
             value={formData.postedByEmail}
             onChange={handleChange}
+            autoComplete="email"
             required
           />
         </label>
@@ -174,6 +215,9 @@ function AddEventForm() {
             name="postedByPhone"
             value={formData.postedByPhone}
             onChange={handleChange}
+            autoComplete="tel"
+            pattern="[0-9\-\(\)\s\+]{10,20}"
+            placeholder="317-555-1234"
             required
           />
         </label>
