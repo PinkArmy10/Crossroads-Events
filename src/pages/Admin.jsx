@@ -377,7 +377,7 @@ function Admin() {
       </section>
 
       <section className="event-form-section">
-        <h3>Find Event by Code</h3>
+        <h3>Edit Event by Code</h3>
 
         <form className="event-form" onSubmit={handleLookup}>
           <label htmlFor="lookupCode">

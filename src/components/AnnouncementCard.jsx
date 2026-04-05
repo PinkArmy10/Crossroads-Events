@@ -1,3 +1,5 @@
+import React from "react";
+
 function formatDateTime(dateTimeString) {
   if (!dateTimeString) return "Not provided";
 
@@ -68,8 +70,12 @@ function getGroupColors(group) {
   return colors[group] || colors.default;
 }
 
-function getStatusConfig(status) {
-  const normalizedStatus = (status || "pending").toLowerCase();
+function getStatusConfig(status, approved) {
+  const normalizedStatus = status
+    ? status.toLowerCase()
+    : approved === true
+    ? "approved"
+    : "pending";
 
   const statuses = {
     pending: {
@@ -93,9 +99,87 @@ function getStatusConfig(status) {
   return statuses[normalizedStatus] || statuses.pending;
 }
 
+function renderLinkedText(text) {
+  if (!text) return "Not provided";
+
+  const regex =
+    /(?:https?:\/\/[^\s]+)|(?:www\.[^\s]+)|(?:[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,})/gi;
+
+  const matches = [...text.matchAll(regex)];
+
+  if (matches.length === 0) {
+    return text;
+  }
+
+  const elements = [];
+  let lastIndex = 0;
+
+  matches.forEach((match, index) => {
+    const matchText = match[0];
+    const start = match.index ?? 0;
+    const end = start + matchText.length;
+
+    if (start > lastIndex) {
+      elements.push(
+        <React.Fragment key={`text-${index}`}>
+          {text.slice(lastIndex, start)}
+        </React.Fragment>
+      );
+    }
+
+    const isEmail = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(matchText);
+    const href = isEmail
+      ? `mailto:${matchText}`
+      : matchText.startsWith("http://") || matchText.startsWith("https://")
+      ? matchText
+      : `https://${matchText}`;
+
+    elements.push(
+      <a
+        key={`link-${index}`}
+        href={href}
+        target={isEmail ? undefined : "_blank"}
+        rel={isEmail ? undefined : "noopener noreferrer"}
+        className="announcement-card__link"
+      >
+        {matchText}
+      </a>
+    );
+
+    lastIndex = end;
+  });
+
+  if (lastIndex < text.length) {
+    elements.push(
+      <React.Fragment key="text-final">
+        {text.slice(lastIndex)}
+      </React.Fragment>
+    );
+  }
+
+  return elements;
+}
+
+function renderPhone(phone) {
+  if (!phone) return "Not provided";
+
+  const formatted = formatPhone(phone);
+  const digits = phone.replace(/\D/g, "");
+
+  if (digits.length === 10) {
+    return (
+      <a href={`tel:${digits}`} className="announcement-card__link">
+        {formatted}
+      </a>
+    );
+  }
+
+  return formatted;
+}
+
 function AnnouncementCard({ event }) {
   const groupColors = getGroupColors(event.group);
-  const statusConfig = getStatusConfig(event.status);
+  const statusConfig = getStatusConfig(event.status, event.approved);
 
   return (
     <article
@@ -123,17 +207,15 @@ function AnnouncementCard({ event }) {
         </span>
       </div>
 
-      <h3 className="announcement-card__title">{event.title || "Untitled Event"}</h3>
+      <h3 className="announcement-card__title">
+        {event.title || "Untitled Event"}
+      </h3>
 
       <div className="announcement-card__details">
         <p><strong>Start:</strong> {formatDateTime(event.startDateTime)}</p>
         <p><strong>End:</strong> {formatDateTime(event.endDateTime)}</p>
-        <p><strong>Location:</strong> {event.location || "Not provided"}</p>
-        <p><strong>Description:</strong> {event.description || "Not provided"}</p>
-        <p><strong>Purpose:</strong> {event.purpose || "Not provided"}</p>
-        <p><strong>Created By:</strong> {event.postedBy?.name || "Not provided"}</p>
-        <p><strong>Email:</strong> {event.postedBy?.email || "Not provided"}</p>
-        <p><strong>Phone:</strong> {formatPhone(event.postedBy?.phone)}</p>
+        <p><strong>Location:</strong> {renderLinkedText(event.location)}</p>
+        <p><strong>Description:</strong> {renderLinkedText(event.description)}</p>
         <p><strong>Event Code:</strong> {event.code || "Not provided"}</p>
       </div>
     </article>

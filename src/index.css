@@ -266,6 +266,24 @@ body {
   transform: translateY(-8px) rotate(-45deg);
 }
 
+.announcement-card__link {
+  color: var(--navy-blue);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  word-break: break-word;
+}
+
+.announcement-card__link:hover {
+  color: var(--royal-blue);
+}
+
+.announcement-card__link:focus-visible {
+  outline: 2px solid var(--royal-blue);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
 @media (min-width: 700px) {
   .page-content {
     padding: 1.5rem;
