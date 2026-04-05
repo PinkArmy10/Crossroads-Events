@@ -8,6 +8,39 @@ import {
 import { db } from "../firebase";
 import AnnouncementSection from "./AnnouncementSection";
 
+function getEventStatus(event) {
+  if (event.status) return event.status;
+  if (event.approved === true) return "approved";
+  if (event.approved === false) return "pending";
+  return "pending";
+}
+
+function shouldShowPublicly(event, now) {
+  const status = getEventStatus(event);
+
+  if (status === "disapproved") return false;
+  if (!event.endDateTime) return false;
+
+  const endOfEventDay = new Date(event.endDateTime);
+  endOfEventDay.setHours(23, 59, 59, 999);
+
+  if (endOfEventDay <= now) return false;
+
+  if (status === "approved") return true;
+
+  if (status === "pending") {
+    if (!event.createdAt?.toDate) return false;
+
+    const createdAt = event.createdAt.toDate();
+    const threeDaysLater = new Date(createdAt);
+    threeDaysLater.setDate(threeDaysLater.getDate() + 3);
+
+    return now >= threeDaysLater;
+  }
+
+  return false;
+}
+
 function HomeAnnouncements() {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -23,18 +56,15 @@ function HomeAnnouncements() {
         const now = new Date();
 
         const liveEvents = snapshot.docs
-          .map((doc) => ({
-            id: doc.id,
-            ...doc.data(),
-          }))
-          .filter((event) => {
-            if (!event.endDateTime) return false;
-
-            const endOfEventDay = new Date(event.endDateTime);
-            endOfEventDay.setHours(23, 59, 59, 999);
-
-            return endOfEventDay > now;
+          .map((doc) => {
+            const data = doc.data();
+            return {
+              id: doc.id,
+              ...data,
+              resolvedStatus: getEventStatus(data),
+            };
           })
+          .filter((event) => shouldShowPublicly(event, now))
           .sort(
             (a, b) =>
               new Date(a.startDateTime) - new Date(b.startDateTime)
@@ -58,17 +88,13 @@ function HomeAnnouncements() {
   oneWeekFromNow.setDate(now.getDate() + 7);
 
   const upcomingWeekEvents = events.filter((event) => {
-    const endOfEventDay = new Date(event.endDateTime);
-    endOfEventDay.setHours(23, 59, 59, 999);
-
-    return endOfEventDay >= now && endOfEventDay <= oneWeekFromNow;
+    const start = new Date(event.startDateTime);
+    return start <= oneWeekFromNow;
   });
 
   const futureEvents = events.filter((event) => {
-    const endOfEventDay = new Date(event.endDateTime);
-    endOfEventDay.setHours(23, 59, 59, 999);
-
-    return endOfEventDay > oneWeekFromNow;
+    const start = new Date(event.startDateTime);
+    return start > oneWeekFromNow;
   });
 
   if (loading) {

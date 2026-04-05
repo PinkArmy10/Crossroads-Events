@@ -1,31 +1,29 @@
-
-/* Mobile First CSS - Phones and Tablets First */
-
-/* CSS Variables - Your Theme */
 :root {
-  --royal-blue: #4169E1;
-  --navy-blue: #1F3A93;
-  --sky-blue: #87CEEB;
-  --soft-grey: #F3F4F6;
-  --charcoal: #2F3E46;
-  --white: #FFFFFF;
-  --border-light: #D9E2EC;
+  --royal-blue: #4169e1;
+  --navy-blue: #1f3a93;
+  --sky-blue: #87ceeb;
+  --soft-grey: #f3f4f6;
+  --charcoal: #2f3e46;
+  --white: #ffffff;
+  --border-light: #d9e2ec;
+  --border-color: #cfd8e3;
+  --light-blue: #5f8fd6;
+  --pale-blue: #eaf1fb;
   --shadow-sm: 0 2px 8px rgba(31, 58, 147, 0.12);
   --shadow-md: 0 4px 16px rgba(31, 58, 147, 0.16);
 }
 
-/* Reset & Base */
 * {
   box-sizing: border-box;
 }
 
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   background-color: var(--soft-grey);
   color: var(--charcoal);
   line-height: 1.6;
-  font-size: 16px; /* Base for phones */
+  font-size: 16px;
 }
 
 .page-content {
@@ -33,10 +31,9 @@ body {
   min-height: 100vh;
 }
 
-/* Mobile Navigation - Hamburger Menu */
 .navbar {
   background: var(--royal-blue);
-  color: white;
+  color: var(--white);
   padding: 1rem;
   position: sticky;
   top: 0;
@@ -45,14 +42,14 @@ body {
 }
 
 .navbar h1 {
-  margin: 0 0 0.5rem 0;
+  margin: 0 0 0.5rem;
   font-size: clamp(1.25rem, 4vw, 1.5rem);
 }
 
 .mobile-menu-toggle {
   background: none;
   border: none;
-  color: white;
+  color: var(--white);
   font-size: 1.5rem;
   cursor: pointer;
   padding: 0.5rem;
@@ -63,7 +60,6 @@ body {
   justify-content: center;
 }
 
-/* Event Form - Mobile First */
 .event-form-section {
   background: var(--white);
   border-radius: 16px;
@@ -72,8 +68,24 @@ body {
   margin-bottom: 2rem;
 }
 
+.event-form-section__header {
+  margin-bottom: 1rem;
+}
+
+.event-form-section h2 {
+  margin: 0 0 0.5rem;
+  color: var(--navy-blue);
+  font-size: clamp(1.45rem, 4vw, 2rem);
+}
+
+.event-form-section__intro {
+  margin: 0;
+  color: #4f5d75;
+}
+
 .event-form {
   display: grid;
+  grid-template-columns: 1fr;
   gap: 1rem;
 }
 
@@ -93,6 +105,16 @@ body {
   font: inherit;
   font-size: 1rem;
   min-height: 44px;
+  background: var(--white);
+  color: var(--charcoal);
+}
+
+.event-form input:focus,
+.event-form textarea:focus,
+.event-form select:focus {
+  outline: none;
+  border-color: var(--light-blue);
+  box-shadow: 0 0 0 3px rgba(95, 143, 214, 0.18);
 }
 
 .event-form textarea {
@@ -102,7 +124,7 @@ body {
 
 .event-form button {
   background: var(--royal-blue);
-  color: white;
+  color: var(--white);
   border: none;
   padding: 1rem;
   border-radius: 12px;
@@ -110,6 +132,10 @@ body {
   font-size: 1rem;
   font-weight: 600;
   min-height: 48px;
+}
+
+.event-form button:hover {
+  background: var(--navy-blue);
 }
 
 .event-form button:disabled {
@@ -126,7 +152,6 @@ body {
   border-left: 4px solid var(--sky-blue);
 }
 
-/* Announcement Cards - Mobile First */
 .home-announcements {
   display: grid;
   gap: 1.5rem;
@@ -172,23 +197,34 @@ body {
 
 .announcement-card__group,
 .announcement-card__status {
-  font-size: 0.85rem;
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.875rem;
   font-weight: 700;
-  padding: 0.5rem 0.75rem;
+  padding: 0.45rem 0.75rem;
   border-radius: 999px;
   min-height: 32px;
-  display: flex;
-  align-items: center;
-}
-
-.announcement-card__status.approved {
-  background: #d1fae5;
-  color: #065f46;
 }
 
 .announcement-card__status.pending {
-  background: #fef3c7;
+  background-color: #fef3c7;
   color: #92400e;
+}
+
+.announcement-card__status.approved {
+  background-color: #dcfce7;
+  color: #166534;
+}
+
+.announcement-card__status.rejected {
+  background-color: #fee2e2;
+  color: #991b1b;
+}
+
+.announcement-card__status.needs_changes,
+.announcement-card__status.needs-changes {
+  background-color: #e0e7ff;
+  color: #3730a3;
 }
 
 .announcement-card__title {
@@ -230,7 +266,6 @@ body {
   transform: translateY(-8px) rotate(-45deg);
 }
 
-/* Tablet Styles */
 @media (min-width: 700px) {
   .page-content {
     padding: 1.5rem;
@@ -247,12 +282,11 @@ body {
   }
 
   .event-form-section {
-    max-width: 600px;
-    margin: 0 auto;
+    max-width: 760px;
+    margin: 0 auto 2rem;
   }
 }
 
-/* Desktop Styles */
 @media (min-width: 1024px) {
   .page-content {
     max-width: 1200px;
@@ -269,7 +303,6 @@ body {
   }
 }
 
-/* Reduced Motion */
 @media (prefers-reduced-motion: reduce) {
   * {
     animation-duration: 0.01ms !important;

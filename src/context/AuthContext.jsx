@@ -37,6 +37,31 @@ export function AuthProvider({ children }) {
     return () => unsubscribe();
   }, []);
 
+  useEffect(() => {
+    if (!user) return;
+
+    const timeoutMs = 20 * 60 * 1000;
+    let timeoutId;
+
+    const resetTimer = () => {
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => {
+        signOut(auth);
+      }, timeoutMs);
+    };
+
+    const events = ["click", "keydown", "mousemove", "scroll", "touchstart"];
+
+    events.forEach((event) => window.addEventListener(event, resetTimer));
+    resetTimer();
+
+    return () => {
+      clearTimeout(timeoutId);
+      events.forEach((event) => window.removeEventListener(event, resetTimer));
+    };
+  }, [user]);
+
+
   async function logout() {
     await signOut(auth);
   }

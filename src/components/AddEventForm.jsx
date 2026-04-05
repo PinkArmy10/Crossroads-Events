@@ -6,7 +6,7 @@ function generateCode() {
   const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
   let code = "";
 
-  for (let i = 0; i < 4; i++) {
+  for (let i = 0; i < 4; i += 1) {
     code += chars.charAt(Math.floor(Math.random() * chars.length));
   }
 
@@ -25,19 +25,20 @@ function isValidPhone(phone) {
   return cleanPhone(phone).length === 10;
 }
 
-function AddEventForm() {
-  const [formData, setFormData] = useState({
-    title: "",
-    location: "",
-    startDateTime: "",
-    endDateTime: "",
-    description: "",
-    postedByName: "",
-    postedByEmail: "",
-    postedByPhone: "",
-    group: "Ward",
-  });
+const initialFormData = {
+  title: "",
+  location: "",
+  startDateTime: "",
+  endDateTime: "",
+  description: "",
+  postedByName: "",
+  postedByEmail: "",
+  postedByPhone: "",
+  group: "Ward",
+};
 
+function AddEventForm() {
+  const [formData, setFormData] = useState(initialFormData);
   const [message, setMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -62,6 +63,18 @@ function AddEventForm() {
     const trimmedPhone = formData.postedByPhone.trim();
     const cleanedPhone = cleanPhone(trimmedPhone);
 
+    if (!trimmedTitle) {
+      setMessage("Please enter an event title.");
+      setIsSubmitting(false);
+      return;
+    }
+
+    if (!trimmedPostedByName) {
+      setMessage("Please enter your name.");
+      setIsSubmitting(false);
+      return;
+    }
+
     if (!isValidEmail(trimmedEmail)) {
       setMessage("Please enter a valid email address.");
       setIsSubmitting(false);
@@ -70,6 +83,12 @@ function AddEventForm() {
 
     if (!isValidPhone(trimmedPhone)) {
       setMessage("Please enter a valid 10-digit phone number.");
+      setIsSubmitting(false);
+      return;
+    }
+
+    if (!formData.startDateTime || !formData.endDateTime) {
+      setMessage("Please enter both the start and end date/time.");
       setIsSubmitting(false);
       return;
     }
@@ -97,26 +116,13 @@ function AddEventForm() {
           phone: cleanedPhone,
         },
         status: "pending",
-        approved: false,
         published: false,
         createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp(),
       });
 
-      setMessage(
-        `Event submitted successfully. Your lookup code is ${eventCode}.`
-      );
-
-      setFormData({
-        title: "",
-        location: "",
-        startDateTime: "",
-        endDateTime: "",
-        description: "",
-        postedByName: "",
-        postedByEmail: "",
-        postedByPhone: "",
-        group: "Ward",
-      });
+      setMessage(`Event submitted successfully. Your lookup code is ${eventCode}.`);
+      setFormData(initialFormData);
     } catch (error) {
       console.error("Error adding event:", error);
       setMessage(`There was a problem submitting the event: ${error.message}`);
@@ -127,108 +133,34 @@ function AddEventForm() {
 
   return (
     <section className="event-form-section">
-      <h2>Submit an Event</h2>
+      <div className="event-form-section__header">
+        <h2>Submit an Event</h2>
+        <p className="event-form-section__intro">
+          Fill out the form below to send your event for review. New submissions
+          are automatically marked as pending approval.
+        </p>
+      </div>
 
       <form className="event-form" onSubmit={handleSubmit}>
-        <label>
+        <label htmlFor="title">
           Event Title
           <input
-            type="text"
+            id="title"
             name="title"
+            type="text"
             value={formData.title}
             onChange={handleChange}
             required
           />
         </label>
 
-        <label>
-          Location
-          <input
-            type="text"
-            name="location"
-            value={formData.location}
-            onChange={handleChange}
-            required
-          />
-        </label>
-
-        <label>
-          Start Date and Time
-          <input
-            type="datetime-local"
-            name="startDateTime"
-            value={formData.startDateTime}
-            onChange={handleChange}
-            required
-          />
-        </label>
-
-        <label>
-          End Date and Time
-          <input
-            type="datetime-local"
-            name="endDateTime"
-            value={formData.endDateTime}
-            onChange={handleChange}
-            required
-          />
-        </label>
-
-        <label>
-          Description
-          <textarea
-            name="description"
-            value={formData.description}
-            onChange={handleChange}
-            rows="5"
-            required
-          />
-        </label>
-
-        <label>
-          Posted By
-          <input
-            type="text"
-            name="postedByName"
-            value={formData.postedByName}
-            onChange={handleChange}
-            required
-          />
-        </label>
-
-        <label>
-          Email
-          <input
-            type="email"
-            name="postedByEmail"
-            value={formData.postedByEmail}
-            onChange={handleChange}
-            autoComplete="email"
-            required
-          />
-        </label>
-
-        <label>
-          Phone
-          <input
-            type="tel"
-            name="postedByPhone"
-            value={formData.postedByPhone}
-            onChange={handleChange}
-            autoComplete="tel"
-            pattern="[0-9\-\(\)\s\+]{10,20}"
-            placeholder="317-555-1234"
-            required
-          />
-        </label>
-
-        <label>
+        <label htmlFor="group">
           Group
           <select
+            id="group"
             name="group"
             value={formData.group}
             onChange={handleChange}
-            required
           >
             <option value="Ward">Ward</option>
             <option value="Elders Quorum">Elders Quorum</option>
@@ -238,12 +170,95 @@ function AddEventForm() {
           </select>
         </label>
 
+        <label htmlFor="location">
+          Location
+          <input
+            id="location"
+            name="location"
+            type="text"
+            value={formData.location}
+            onChange={handleChange}
+            placeholder="Building, room, address, or meeting location"
+          />
+        </label>
+
+        <label htmlFor="startDateTime">
+          Start Date and Time
+          <input
+            id="startDateTime"
+            name="startDateTime"
+            type="datetime-local"
+            value={formData.startDateTime}
+            onChange={handleChange}
+            required
+          />
+        </label>
+
+        <label htmlFor="endDateTime">
+          End Date and Time
+          <input
+            id="endDateTime"
+            name="endDateTime"
+            type="datetime-local"
+            value={formData.endDateTime}
+            onChange={handleChange}
+            required
+          />
+        </label>
+
+        <label htmlFor="description">
+          Description
+          <textarea
+            id="description"
+            name="description"
+            value={formData.description}
+            onChange={handleChange}
+            placeholder="Share event details, schedule, and what attendees should know"
+          />
+        </label>
+
+        <label htmlFor="postedByName">
+          Posted By
+          <input
+            id="postedByName"
+            name="postedByName"
+            type="text"
+            value={formData.postedByName}
+            onChange={handleChange}
+            required
+          />
+        </label>
+
+        <label htmlFor="postedByEmail">
+          Email
+          <input
+            id="postedByEmail"
+            name="postedByEmail"
+            type="email"
+            value={formData.postedByEmail}
+            onChange={handleChange}
+            required
+          />
+        </label>
+
+        <label htmlFor="postedByPhone">
+          Phone
+          <input
+            id="postedByPhone"
+            name="postedByPhone"
+            type="tel"
+            value={formData.postedByPhone}
+            onChange={handleChange}
+            required
+          />
+        </label>
+
         <button type="submit" disabled={isSubmitting}>
           {isSubmitting ? "Submitting..." : "Submit Event"}
         </button>
-      </form>
 
-      {message && <p className="form-message">{message}</p>}
+        {message && <div className="form-message">{message}</div>}
+      </form>
     </section>
   );
 }

@@ -28,35 +28,34 @@ function formatPhone(phone) {
 function getGroupColors(group) {
   const colors = {
     Ward: {
-    border: "#4169E1",
-    badgeBg: "#DCE7FF",
-    badgeText: "#1F4DB8",
-    cardBg: "#EEF4FF",
+      border: "#1D4ED8",
+      badgeBg: "#DBEAFE",
+      badgeText: "#1E40AF",
+      cardBg: "#EFF6FF",
     },
-
     "Elders Quorum": {
-        border: "#334155",
-        badgeBg: "#E2E8F0",
-        badgeText: "#1E293B",
-        cardBg: "#F1F5F9",
-        },
+      border: "#334155",
+      badgeBg: "#E2E8F0",
+      badgeText: "#0F172A",
+      cardBg: "#F1F5F9",
+    },
     "Relief Society": {
-      border: "#C06C84",
-      badgeBg: "#F8DCE4",
-      badgeText: "#8A3D58",
-      cardBg: "#FDF1F5",
+      border: "#BE185D",
+      badgeBg: "#FCE7F3",
+      badgeText: "#9D174D",
+      cardBg: "#FDF2F8",
     },
     Youth: {
-      border: "#2E86AB",
-      badgeBg: "#D9EEF7",
-      badgeText: "#1D5F7A",
-      cardBg: "#EEF8FC",
+      border: "#0F766E",
+      badgeBg: "#CCFBF1",
+      badgeText: "#115E59",
+      cardBg: "#F0FDFA",
     },
     Primary: {
-      border: "#E3A53F",
-      badgeBg: "#FCECCB",
-      badgeText: "#8A5A00",
-      cardBg: "#FFF8EA",
+      border: "#D97706",
+      badgeBg: "#FEF3C7",
+      badgeText: "#92400E",
+      cardBg: "#FFFBEB",
     },
     default: {
       border: "#64748B",
@@ -69,16 +68,42 @@ function getGroupColors(group) {
   return colors[group] || colors.default;
 }
 
+function getStatusConfig(status) {
+  const normalizedStatus = (status || "pending").toLowerCase();
+
+  const statuses = {
+    pending: {
+      label: "Pending Approval",
+      className: "pending",
+    },
+    approved: {
+      label: "Approved",
+      className: "approved",
+    },
+    rejected: {
+      label: "Rejected",
+      className: "rejected",
+    },
+    needs_changes: {
+      label: "Needs Changes",
+      className: "needs-changes",
+    },
+  };
+
+  return statuses[normalizedStatus] || statuses.pending;
+}
+
 function AnnouncementCard({ event }) {
   const groupColors = getGroupColors(event.group);
+  const statusConfig = getStatusConfig(event.status);
 
   return (
     <article
-        className="announcement-card"
-        style={{
-            backgroundColor: groupColors.cardBg,
-            borderTop: `6px solid ${groupColors.border}`,
-        }}
+      className="announcement-card"
+      style={{
+        backgroundColor: groupColors.cardBg,
+        borderTop: `6px solid ${groupColors.border}`,
+      }}
     >
       <div className="announcement-card__header">
         <span
@@ -88,25 +113,24 @@ function AnnouncementCard({ event }) {
             color: groupColors.badgeText,
           }}
         >
-          {event.group}
+          {event.group || "General"}
         </span>
 
         <span
-          className={`announcement-card__status ${
-            event.approved ? "approved" : "pending"
-          }`}
+          className={`announcement-card__status ${statusConfig.className}`}
         >
-          {event.approved ? "Approved" : "Pending Approval"}
+          {statusConfig.label}
         </span>
       </div>
 
-      <h3 className="announcement-card__title">{event.title}</h3>
+      <h3 className="announcement-card__title">{event.title || "Untitled Event"}</h3>
 
       <div className="announcement-card__details">
         <p><strong>Start:</strong> {formatDateTime(event.startDateTime)}</p>
         <p><strong>End:</strong> {formatDateTime(event.endDateTime)}</p>
         <p><strong>Location:</strong> {event.location || "Not provided"}</p>
         <p><strong>Description:</strong> {event.description || "Not provided"}</p>
+        <p><strong>Purpose:</strong> {event.purpose || "Not provided"}</p>
         <p><strong>Created By:</strong> {event.postedBy?.name || "Not provided"}</p>
         <p><strong>Email:</strong> {event.postedBy?.email || "Not provided"}</p>
         <p><strong>Phone:</strong> {formatPhone(event.postedBy?.phone)}</p>

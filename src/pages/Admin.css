@@ -1,3 +1,10 @@
+/* =========================================================
+   ADMIN PAGE LAYOUT
+   What this does:
+   - Controls overall spacing for the admin page
+   - Styles each admin section box/card
+   ========================================================= */
+
 .admin-page {
   display: grid;
   gap: 1.5rem;
@@ -5,38 +12,64 @@
 
 .admin-page .event-form-section {
   background: var(--white, #ffffff);
-  border: 1px solid var(--border-color, #cfd8e3);
+  border: 1px solid var(--border-light, #d9e2ec);
   border-radius: 16px;
-  box-shadow: 0 4px 14px rgba(31, 58, 147, 0.12);
+  box-shadow: var(--shadow-sm, 0 2px 8px rgba(31, 58, 147, 0.12));
   padding: 1.5rem;
 }
 
+
+/* =========================================================
+   ADMIN PAGE HEADINGS AND TEXT
+   What this does:
+   - Styles section titles and normal paragraph text
+   - Keeps colors consistent with your blue theme
+   ========================================================= */
+
 .admin-page h2 {
   margin: 0 0 1rem;
-  color: var(--royal-blue, #1f4fa3);
+  color: var(--royal-blue, #4169e1);
   font-size: clamp(1.35rem, 3vw, 1.9rem);
   line-height: 1.2;
 }
 
 .admin-page h3 {
   margin: 0 0 0.75rem;
-  color: var(--navy-blue, #16356b);
+  color: var(--navy-blue, #1f3a93);
   font-size: 1.1rem;
   line-height: 1.3;
 }
 
+.admin-page h4 {
+  margin: 0;
+}
+
 .admin-page p {
   margin: 0 0 0.75rem;
-  color: var(--charcoal, #2e3135);
+  color: var(--charcoal, #2f3e46);
   line-height: 1.6;
 }
 
 .admin-page strong {
-  color: var(--navy-blue, #16356b);
+  color: var(--navy-blue, #1f3a93);
 }
+
+.admin-page .admin-section-note {
+  color: #54606f;
+  font-size: 0.95rem;
+}
+
+
+/* =========================================================
+   ADMIN FORMS
+   What this does:
+   - Keeps the editor form single-column
+   - Styles labels, inputs, textarea, and select fields
+   ========================================================= */
 
 .admin-page .event-form {
   display: grid;
+  grid-template-columns: 1fr;
   gap: 1rem;
 }
 
@@ -44,7 +77,7 @@
   display: grid;
   gap: 0.45rem;
   font-weight: 600;
-  color: var(--charcoal, #2e3135);
+  color: var(--charcoal, #2f3e46);
 }
 
 .admin-page .event-form input,
@@ -52,12 +85,16 @@
 .admin-page .event-form select {
   width: 100%;
   padding: 0.9rem 1rem;
-  border: 1px solid var(--border-color, #cfd8e3);
+  border: 1px solid var(--border-light, #d9e2ec);
   border-radius: 12px;
   background: #fcfdff;
-  color: var(--charcoal, #2e3135);
+  color: var(--charcoal, #2f3e46);
   font: inherit;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    background-color 0.2s ease,
+    color 0.2s ease;
 }
 
 .admin-page .event-form textarea {
@@ -69,9 +106,94 @@
 .admin-page .event-form textarea:focus,
 .admin-page .event-form select:focus {
   outline: none;
-  border-color: var(--light-blue, #5f8fd6);
-  box-shadow: 0 0 0 3px rgba(95, 143, 214, 0.18);
+  border-color: var(--sky-blue, #87ceeb);
+  box-shadow: 0 0 0 3px rgba(135, 206, 235, 0.22);
 }
+
+
+/* =========================================================
+   STATUS DROPDOWN COLORS
+   What this does:
+   - Colors the admin status dropdown based on current status
+   - Fixes the missing pending color and missing dropdown color
+   ========================================================= */
+
+.admin-page .event-form select.status-select {
+  font-weight: 700;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+.admin-page .event-form select.status-select.status-pending {
+  background-color: #fff8dc !important;
+  color: #8a6500 !important;
+  border-color: #e5cc7a !important;
+}
+
+.admin-page .event-form select.status-select.status-approved {
+  background-color: #dff5e4 !important;
+  color: #1f6a38 !important;
+  border-color: #75bf8a !important;
+}
+
+.admin-page .event-form select.status-select.status-rejected {
+  background-color: #fde2e2 !important;
+  color: #9b1c1c !important;
+  border-color: #dd7c7c !important;
+}
+
+.admin-page .event-form select.status-select.status-needs_changes,
+.admin-page .event-form select.status-select.status-needs-changes {
+  background-color: #e0e7ff !important;
+  color: #3730a3 !important;
+  border-color: #9aa5ff !important;
+}
+
+
+/* =========================================================
+   GENERIC STATUS HELPERS
+   What this does:
+   - Lets you reuse the same status colors on other elements
+   - Helpful if you later add pills, tags, or labels
+   ========================================================= */
+
+.admin-page .status-select {
+  font-weight: 700;
+}
+
+.admin-page .status-pending {
+  background-color: #fff8dc !important;
+  color: #8a6500 !important;
+  border-color: #e5cc7a !important;
+}
+
+.admin-page .status-approved {
+  background-color: #dff5e4 !important;
+  color: #1f6a38 !important;
+  border-color: #75bf8a !important;
+}
+
+.admin-page .status-rejected {
+  background-color: #fde2e2 !important;
+  color: #9b1c1c !important;
+  border-color: #dd7c7c !important;
+}
+
+.admin-page .status-needs_changes,
+.admin-page .status-needs-changes {
+  background-color: #e0e7ff !important;
+  color: #3730a3 !important;
+  border-color: #9aa5ff !important;
+}
+
+
+/* =========================================================
+   ADMIN BUTTONS
+   What this does:
+   - Styles primary, secondary, and danger buttons
+   - Keeps button spacing and hover behavior consistent
+   ========================================================= */
 
 .admin-page button {
   border: none;
@@ -81,7 +203,10 @@
   font-weight: 700;
   cursor: pointer;
   min-height: 46px;
-  transition: transform 0.18s ease, background-color 0.2s ease, opacity 0.2s ease;
+  transition:
+    transform 0.18s ease,
+    background-color 0.2s ease,
+    opacity 0.2s ease;
 }
 
 .admin-page button:hover {
@@ -94,23 +219,19 @@
   transform: none;
 }
 
-.admin-page .event-form button,
-.admin-page .announcement-card button,
 .admin-page .admin-primary-btn {
-  background: var(--royal-blue, #1f4fa3);
+  background: var(--royal-blue, #4169e1);
   color: var(--white, #ffffff);
 }
 
-.admin-page .event-form button:hover,
-.admin-page .announcement-card button:hover,
 .admin-page .admin-primary-btn:hover {
-  background: var(--navy-blue, #16356b);
+  background: var(--navy-blue, #1f3a93);
 }
 
 .admin-page .admin-secondary-btn {
-  background: var(--pale-blue, #eaf1fb);
-  color: var(--navy-blue, #16356b);
-  border: 1px solid var(--border-color, #cfd8e3);
+  background: #eaf1fb;
+  color: var(--navy-blue, #1f3a93);
+  border: 1px solid var(--border-light, #d9e2ec);
 }
 
 .admin-page .admin-secondary-btn:hover {
@@ -126,15 +247,38 @@
   background: #872727;
 }
 
+.admin-page .admin-actions-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 0.75rem;
+}
+
+
+/* =========================================================
+   FORM MESSAGES
+   What this does:
+   - Styles success/info messages under forms and actions
+   - Makes notices easier to see without being harsh
+   ========================================================= */
+
 .admin-page .form-message {
   margin-top: 1rem;
   padding: 0.95rem 1rem;
   border-radius: 12px;
   background: #eef5ff;
-  border-left: 4px solid var(--light-blue, #5f8fd6);
-  color: var(--charcoal, #2e3135);
+  border-left: 4px solid var(--sky-blue, #87ceeb);
+  color: var(--charcoal, #2f3e46);
   font-weight: 600;
 }
+
+
+/* =========================================================
+   EVENT CARDS GRID
+   What this does:
+   - Lays out the pending events and admin all-events sections
+   - Starts as one column on mobile
+   ========================================================= */
 
 .admin-page .announcement-grid {
   display: grid;
@@ -142,10 +286,17 @@
   gap: 1rem;
 }
 
+
+/* =========================================================
+   EVENT CARDS
+   What this does:
+   - Styles the event cards shown in pending and all-events lists
+   - Keeps the same general visual feel as your existing cards
+   ========================================================= */
+
 .admin-page .announcement-card {
   background: linear-gradient(180deg, #ffffff 0%, #f9fbff 100%);
-  border: 1px solid var(--border-color, #cfd8e3);
-  border-left: 5px solid var(--royal-blue, #1f4fa3);
+  border: 1px solid var(--border-light, #d9e2ec);
   border-radius: 14px;
   padding: 1.15rem;
   box-shadow: 0 3px 12px rgba(31, 58, 147, 0.1);
@@ -153,7 +304,7 @@
 
 .admin-page .announcement-card__title {
   margin: 0 0 0.75rem;
-  color: var(--navy-blue, #16356b);
+  color: var(--navy-blue, #1f3a93);
   font-size: 1.1rem;
 }
 
@@ -165,14 +316,16 @@
 .admin-page .announcement-card__details p {
   margin: 0;
   font-size: 0.96rem;
+  word-break: break-word;
 }
 
-.admin-page .admin-actions-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.75rem;
-  margin-top: 0.75rem;
-}
+
+/* =========================================================
+   STATUS BADGES ON EVENT CARDS
+   What this does:
+   - Colors the pill/badge at the top of each admin event card
+   - Fixes the missing pending approval color
+   ========================================================= */
 
 .admin-page .admin-status-strip {
   display: inline-flex;
@@ -182,6 +335,7 @@
   border-radius: 999px;
   font-size: 0.88rem;
   font-weight: 700;
+  margin-bottom: 0.85rem;
 }
 
 .admin-page .admin-status-strip.pending {
@@ -194,31 +348,42 @@
   color: #1f6a38;
 }
 
+.admin-page .admin-status-strip.rejected {
+  background: #fde2e2;
+  color: #9b1c1c;
+}
+
+.admin-page .admin-status-strip.needs_changes,
+.admin-page .admin-status-strip.needs-changes {
+  background: #e0e7ff;
+  color: #3730a3;
+}
+
+
+/* =========================================================
+   META INFO BLOCK
+   What this does:
+   - Styles the selected event summary above the editor
+   - Shows current status and submitter info in a soft blue box
+   ========================================================= */
+
 .admin-page .admin-meta-block {
   display: grid;
   gap: 0.35rem;
   padding: 0.9rem 1rem;
-  background: var(--pale-blue, #eaf1fb);
+  background: #eaf1fb;
   border: 1px solid #dbe6f5;
   border-radius: 12px;
+  margin-bottom: 1rem;
 }
 
-.admin-page .admin-section-note {
-  color: #54606f;
-  font-size: 0.95rem;
-}
 
-.admin-page .admin-checkbox-row {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-  font-weight: 600;
-}
-
-.admin-page .admin-checkbox-row input[type="checkbox"] {
-  width: 18px;
-  height: 18px;
-}
+/* =========================================================
+   TABLET LAYOUT
+   What this does:
+   - Adds more space on medium screens
+   - Shows cards in two columns when there is room
+   ========================================================= */
 
 @media (min-width: 768px) {
   .admin-page {
@@ -234,11 +399,26 @@
   }
 }
 
+
+/* =========================================================
+   LARGE DESKTOP LAYOUT
+   What this does:
+   - Expands event card grids to three columns on wide screens
+   ========================================================= */
+
 @media (min-width: 1100px) {
   .admin-page .announcement-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
+
+
+/* =========================================================
+   MOBILE ADJUSTMENTS
+   What this does:
+   - Makes buttons stack on smaller screens
+   - Tightens section spacing on phones
+   ========================================================= */
 
 @media (max-width: 767px) {
   .admin-page .event-form-section {
@@ -254,6 +434,13 @@
     flex-direction: column;
   }
 }
+
+
+/* =========================================================
+   REDUCED MOTION
+   What this does:
+   - Removes transitions for users who prefer less motion
+   ========================================================= */
 
 @media (prefers-reduced-motion: reduce) {
   .admin-page button,
