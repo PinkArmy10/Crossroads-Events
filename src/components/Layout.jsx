@@ -19,7 +19,7 @@ function Layout() {
         <div className="navbar-container">
           <div className="nav-left">
             <img
-              src="../public/images/Christus.png"
+              src="/images/Christus.png"
               alt="Crossroads Ward Christus"
               className="nav-logo"
             />
