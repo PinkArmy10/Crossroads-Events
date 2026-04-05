@@ -4,6 +4,8 @@ import Home from "./pages/Home";
 import Contact from "./pages/Contact";
 import Events from "./pages/Events";
 import Admin from "./pages/Admin";
+import Login from "./pages/Login";
+import AdminRoute from "./components/AdminRoute";
 
 function App() {
   return (
@@ -12,7 +14,15 @@ function App() {
         <Route index element={<Home />} />
         <Route path="contact" element={<Contact />} />
         <Route path="events" element={<Events />} />
-        <Route path="admin" element={<Admin />} />
+        <Route path="login" element={<Login />} />
+        <Route
+          path="admin"
+          element={
+            <AdminRoute>
+              <Admin />
+            </AdminRoute>
+          }
+        />
       </Route>
     </Routes>
   );
