@@ -1,46 +1,101 @@
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background: #f5f7fb;
-  color: #222;
+
+/* Mobile First CSS - Phones and Tablets First */
+
+/* CSS Variables - Your Theme */
+:root {
+  --royal-blue: #4169E1;
+  --navy-blue: #1F3A93;
+  --sky-blue: #87CEEB;
+  --soft-grey: #F3F4F6;
+  --charcoal: #2F3E46;
+  --white: #FFFFFF;
+  --border-light: #D9E2EC;
+  --shadow-sm: 0 2px 8px rgba(31, 58, 147, 0.12);
+  --shadow-md: 0 4px 16px rgba(31, 58, 147, 0.16);
 }
 
+/* Reset & Base */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background-color: var(--soft-grey);
+  color: var(--charcoal);
+  line-height: 1.6;
+  font-size: 16px; /* Base for phones */
+}
+
+.page-content {
+  padding: 1rem;
+  min-height: 100vh;
+}
+
+/* Mobile Navigation - Hamburger Menu */
 .navbar {
-  background: royalblue;
+  background: var(--royal-blue);
   color: white;
   padding: 1rem;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: var(--shadow-md);
 }
 
 .navbar h1 {
-  margin: 0 0 0.75rem 0;
+  margin: 0 0 0.5rem 0;
+  font-size: clamp(1.25rem, 4vw, 1.5rem);
+}
+
+.mobile-menu-toggle {
+  background: none;
+  border: none;
+  color: white;
   font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  min-height: 44px;
+  min-width: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .nav-links {
   list-style: none;
-  display: flex;
-  gap: 1rem;
   padding: 0;
   margin: 0;
+  display: none;
+}
+
+.nav-links.active {
+  display: block;
 }
 
 .nav-links a {
   color: white;
   text-decoration: none;
+  display: block;
+  padding: 1rem 1rem 1rem 0;
+  font-weight: 500;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
 }
 
-.page-content {
-  padding: 1.5rem;
+.nav-links a:hover {
+  color: var(--sky-blue);
 }
 
-
-/* event form styles */
+/* Event Form - Mobile First */
 .event-form-section {
-  max-width: 700px;
-  margin: 0 auto;
+  background: var(--white);
+  border-radius: 16px;
   padding: 1.5rem;
-  background: #ffffff;
-  border-radius: 12px;
+  box-shadow: var(--shadow-md);
+  margin-bottom: 2rem;
 }
 
 .event-form {
@@ -52,24 +107,35 @@ body {
   display: grid;
   gap: 0.4rem;
   font-weight: 600;
+  font-size: 1rem;
 }
 
 .event-form input,
 .event-form textarea,
 .event-form select {
-  padding: 0.75rem;
-  border: 1px solid #cbd5e1;
-  border-radius: 8px;
+  padding: 1rem;
+  border: 2px solid var(--border-light);
+  border-radius: 12px;
   font: inherit;
+  font-size: 1rem;
+  min-height: 44px;
+}
+
+.event-form textarea {
+  min-height: 100px;
+  resize: vertical;
 }
 
 .event-form button {
-  background: royalblue;
+  background: var(--royal-blue);
   color: white;
   border: none;
-  padding: 0.85rem 1rem;
-  border-radius: 8px;
+  padding: 1rem;
+  border-radius: 12px;
   cursor: pointer;
+  font-size: 1rem;
+  font-weight: 600;
+  min-height: 48px;
 }
 
 .event-form button:disabled {
@@ -80,4 +146,176 @@ body {
 .form-message {
   margin-top: 1rem;
   font-weight: 600;
+  padding: 1rem;
+  border-radius: 12px;
+  background: #f0f9ff;
+  border-left: 4px solid var(--sky-blue);
+}
+
+/* Announcement Cards - Mobile First */
+.home-announcements {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.announcement-section {
+  display: grid;
+  gap: 1rem;
+}
+
+.announcement-section__title {
+  color: var(--royal-blue);
+  font-size: clamp(1.25rem, 5vw, 1.75rem);
+  margin-bottom: 0.5rem;
+}
+
+.announcement-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+.announcement-card {
+  border-radius: 16px;
+  padding: 1.25rem;
+  border: 1px solid var(--border-light);
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.announcement-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.announcement-card__header {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.announcement-card__group,
+.announcement-card__status {
+  font-size: 0.85rem;
+  font-weight: 700;
+  padding: 0.5rem 0.75rem;
+  border-radius: 999px;
+  min-height: 32px;
+  display: flex;
+  align-items: center;
+}
+
+.announcement-card__status.approved {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.announcement-card__status.pending {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.announcement-card__title {
+  color: var(--navy-blue);
+  font-size: clamp(1.1rem, 4vw, 1.4rem);
+  margin: 0 0 0.75rem;
+  line-height: 1.3;
+}
+
+.announcement-card__details {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.announcement-card__details p {
+  margin: 0;
+  line-height: 1.5;
+  font-size: 0.95rem;
+  word-break: break-word;
+}
+
+.announcement-section__empty,
+.announcement-feedback {
+  font-size: 1rem;
+  text-align: center;
+  padding: 2rem;
+  color: #64748b;
+}
+
+.hamburger.active span:nth-child(1) {
+  transform: translateY(8px) rotate(45deg);
+}
+
+.hamburger.active span:nth-child(2) {
+  opacity: 0;
+}
+
+.hamburger.active span:nth-child(3) {
+  transform: translateY(-8px) rotate(-45deg);
+}
+
+/* Tablet Styles */
+@media (min-width: 700px) {
+  .page-content {
+    padding: 1.5rem;
+  }
+
+  .announcement-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .announcement-card__header {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .event-form-section {
+    max-width: 600px;
+    margin: 0 auto;
+  }
+}
+
+/* Desktop Styles */
+@media (min-width: 1024px) {
+  .page-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 1.5rem;
+  }
+
+  .mobile-menu-toggle {
+    display: none;
+  }
+
+  .announcement-grid {
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  }
+}
+
+/* Touch Targets */
+@media (hover: none) and (pointer: coarse) {
+  button,
+  a,
+  .mobile-menu-toggle,
+  .nav-links a {
+    min-height: 48px;
+    min-width: 48px;
+  }
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

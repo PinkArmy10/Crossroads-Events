@@ -1,9 +1,11 @@
+import HomeAnnouncements from "../components/HomeAnnouncements";
+
 function Home() {
   return (
-    <div>
-      <h2>Welcome to Crossroads Announcements</h2>
-      <p>Stay updated with the latest announcements from Crossroads.</p>
-    </div>
+    <main className="home-page">
+      <h1 className="page-title">Crossroads Ward Announcements</h1>
+      <HomeAnnouncements />
+    </main>
   );
 }
 

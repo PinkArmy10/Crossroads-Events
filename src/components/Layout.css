@@ -1,0 +1,253 @@
+/* =========================
+   1. COLOR VARIABLES
+   These keep your church color scheme consistent
+   across the whole layout.
+========================= */
+:root {
+  --royal-blue: #1f4fa3;
+  --navy-blue: #16356b;
+  --light-blue: #5f8fd6;
+  --pale-blue: #eaf1fb;
+  --page-background: #f4f6f8;
+  --charcoal: #2e3135;
+  --white: #ffffff;
+  --border-color: #cfd8e3;
+  --shadow-color: rgba(0, 0, 0, 0.12);
+}
+
+/* =========================
+   2. PAGE RESET / BASE
+   Basic page styling for consistent spacing
+   and readable text.
+========================= */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--page-background);
+  color: var(--charcoal);
+}
+
+/* =========================
+   3. NAVBAR WRAPPER
+   Main top navigation bar with royal/navy blue
+   church bulletin style appearance.
+========================= */
+.navbar {
+  background: linear-gradient(135deg, var(--royal-blue), var(--navy-blue));
+  color: var(--white);
+  box-shadow: 0 4px 10px var(--shadow-color);
+  border-bottom: 3px solid var(--light-blue);
+}
+
+/* =========================
+   4. NAVBAR INNER LAYOUT
+   Holds the title, hamburger button,
+   and navigation links.
+========================= */
+.navbar-container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 1rem 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  position: relative;
+}
+
+/* =========================
+   5. BRAND / TITLE AREA
+   Title and small subtitle under it.
+========================= */
+.brand-area {
+  display: flex;
+  flex-direction: column;
+}
+
+.site-title {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.site-subtitle {
+  margin: 0.2rem 0 0;
+  font-size: 0.95rem;
+  color: #dce8ff;
+}
+
+/* =========================
+   6. DESKTOP NAV LINKS
+   Standard horizontal navigation for larger screens.
+========================= */
+.nav-links {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-links li {
+  margin: 0;
+  padding: 0;
+}
+
+.nav-links a {
+  display: inline-block;
+  color: var(--white);
+  text-decoration: none;
+  font-weight: 600;
+  padding: 0.65rem 0.9rem;
+  border-radius: 8px;
+  transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+/* Hover and keyboard focus state */
+.nav-links a:hover,
+.nav-links a:focus {
+  background-color: var(--light-blue);
+  color: var(--white);
+  outline: none;
+}
+
+/* =========================
+   7. HAMBURGER BUTTON
+   Hidden on desktop, shown on mobile.
+========================= */
+.hamburger {
+  display: none;
+  width: 44px;
+  height: 44px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  padding: 0;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+}
+
+/* The three menu lines */
+.hamburger span {
+  display: block;
+  width: 26px;
+  height: 3px;
+  margin: 0 auto;
+  background-color: var(--white);
+  border-radius: 20px;
+  transition: all 0.3s ease;
+}
+
+/* =========================
+   8. HAMBURGER ACTIVE STATE
+   Animates hamburger into an X when open.
+========================= */
+.hamburger.active span:nth-child(1) {
+  transform: translateY(8px) rotate(45deg);
+}
+
+.hamburger.active span:nth-child(2) {
+  opacity: 0;
+}
+
+.hamburger.active span:nth-child(3) {
+  transform: translateY(-8px) rotate(-45deg);
+}
+
+/* =========================
+   9. PAGE CONTENT AREA
+   Main content below the navigation.
+========================= */
+.page-content {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 1.5rem 1.25rem 2rem;
+}
+
+/* =========================
+   10. TABLET + MOBILE NAV
+   Uses hamburger menu for anything below 1024px.
+========================= */
+@media (max-width: 1023px) {
+  .navbar-container {
+    flex-wrap: wrap;
+  }
+
+  .brand-area {
+    max-width: 75%;
+  }
+
+  .site-title {
+    font-size: 1.2rem;
+  }
+
+  .site-subtitle {
+    font-size: 0.85rem;
+  }
+
+  .hamburger {
+    display: flex;
+  }
+
+  .nav-links {
+    display: none;
+    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.25rem;
+    margin-top: 0.75rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  .nav-links.show-menu {
+    display: flex;
+  }
+
+  .nav-links a {
+    display: block;
+    width: 100%;
+    padding: 0.85rem 1rem;
+    background-color: rgba(255, 255, 255, 0.06);
+  }
+
+  .nav-links a:hover,
+  .nav-links a:focus {
+    background-color: var(--light-blue);
+  }
+}
+
+/* =========================
+   11. DESKTOP NAV
+   Shows regular nav and hides hamburger
+   at 1024px and above.
+========================= */
+@media (min-width: 1024px) {
+  .hamburger {
+    display: none;
+  }
+
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    width: auto;
+    margin-top: 0;
+    padding-top: 0;
+    border-top: none;
+  }
+
+  .nav-links a {
+    display: inline-block;
+    width: auto;
+    padding: 0.65rem 0.9rem;
+    background-color: transparent;
+  }
+}
