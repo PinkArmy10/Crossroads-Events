@@ -56,6 +56,17 @@ function Layout() {
                 Home
               </NavLink>
             </li>
+
+            <li>
+              <NavLink
+                to="/events"
+                onClick={closeMenu}
+                className={({ isActive }) => isActive ? "nav-link active-link" : "nav-link"}
+              >
+                Submission
+              </NavLink>
+            </li>
+
             <li>
               <NavLink
                 to="/contact"
@@ -65,15 +76,7 @@ function Layout() {
                 Contact
               </NavLink>
             </li>
-            <li>
-              <NavLink
-                to="/events"
-                onClick={closeMenu}
-                className={({ isActive }) => isActive ? "nav-link active-link" : "nav-link"}
-              >
-                Events
-              </NavLink>
-            </li>
+
             <li>
               <NavLink
                 to="/admin"

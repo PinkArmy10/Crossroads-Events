@@ -29,7 +29,11 @@ function HomeAnnouncements() {
           }))
           .filter((event) => {
             if (!event.endDateTime) return false;
-            return new Date(event.endDateTime) > now;
+
+            const endOfEventDay = new Date(event.endDateTime);
+            endOfEventDay.setHours(23, 59, 59, 999);
+
+            return endOfEventDay > now;
           })
           .sort(
             (a, b) =>
@@ -54,13 +58,17 @@ function HomeAnnouncements() {
   oneWeekFromNow.setDate(now.getDate() + 7);
 
   const upcomingWeekEvents = events.filter((event) => {
-    const start = new Date(event.startDateTime);
-    return start >= now && start <= oneWeekFromNow;
+    const endOfEventDay = new Date(event.endDateTime);
+    endOfEventDay.setHours(23, 59, 59, 999);
+
+    return endOfEventDay >= now && endOfEventDay <= oneWeekFromNow;
   });
 
   const futureEvents = events.filter((event) => {
-    const start = new Date(event.startDateTime);
-    return start > oneWeekFromNow;
+    const endOfEventDay = new Date(event.endDateTime);
+    endOfEventDay.setHours(23, 59, 59, 999);
+
+    return endOfEventDay > oneWeekFromNow;
   });
 
   if (loading) {
