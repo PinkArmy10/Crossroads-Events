@@ -17,9 +17,16 @@ function Layout() {
     <>
       <nav className="navbar">
         <div className="navbar-container">
-          <div className="brand-area">
-            <h1 className="site-title">Crossroads Ward Announcements</h1>
-            <p className="site-subtitle">Ward news, events, and updates</p>
+          <div className="nav-left">
+            <img
+              src="../public/images/Christus.png"
+              alt="Crossroads Ward Christus"
+              className="nav-logo"
+            />
+            <div className="brand-area">
+              <h1 className="site-title">Crossroads Ward Announcements</h1>
+              <p className="site-subtitle">Ward news, events, and updates</p>
+            </div>
           </div>
 
           <button

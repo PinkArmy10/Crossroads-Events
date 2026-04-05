@@ -60,6 +60,29 @@ body {
 }
 
 /* =========================
+   4A. LEFT NAV GROUP
+   Holds the logo and brand text together.
+========================= */
+.nav-left {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  min-width: 0;
+}
+
+/* =========================
+   4B. NAV LOGO
+   Logo displayed before the brand title.
+========================= */
+.nav-logo {
+  width: 52px;
+  height: 52px;
+  object-fit: contain;
+  display: block;
+  flex-shrink: 0;
+}
+
+/* =========================
    5. BRAND / TITLE AREA
    Title and small subtitle under it.
 ========================= */
@@ -176,52 +199,75 @@ body {
    Uses hamburger menu for anything below 1024px.
 ========================= */
 @media (max-width: 1023px) {
-  .navbar-container {
-    flex-wrap: wrap;
-  }
+    .navbar-container {
+        flex-wrap: wrap;
+    }
 
-  .brand-area {
-    max-width: 75%;
-  }
+    .brand-area {
+        max-width: 75%;
+    }
 
-  .site-title {
-    font-size: 1.2rem;
-  }
+    .nav-logo {
+    width: auto;
+    height: 42px;
+    }
 
-  .site-subtitle {
-    font-size: 0.85rem;
-  }
-
-  .hamburger {
+    .nav-left {
     display: flex;
-  }
+    align-items: center;
+    gap: 0.5rem; /* smaller space between logo and title */
+    min-width: 0;
+    }
 
-  .nav-links {
-    display: none;
-    width: 100%;
+    .brand-area {
+    display: flex;
     flex-direction: column;
-    align-items: stretch;
-    gap: 0.25rem;
-    margin-top: 0.75rem;
-    padding-top: 0.75rem;
-    border-top: 1px solid rgba(255, 255, 255, 0.2);
-  }
+    gap: 0;
+    }
 
-  .nav-links.show-menu {
-    display: flex;
-  }
+    .site-title {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 700;
+    line-height: 1.1;
+    }
 
-  .nav-links a {
-    display: block;
-    width: 100%;
-    padding: 0.85rem 1rem;
-    background-color: rgba(255, 255, 255, 0.06);
-  }
+    .site-subtitle {
+    margin: 0;
+    font-size: 0.95rem;
+    color: #dce8ff;
+    }
 
-  .nav-links a:hover,
-  .nav-links a:focus {
-    background-color: var(--light-blue);
-  }
+    .hamburger {
+        display: flex;
+    }
+
+    .nav-links {
+        display: none;
+        width: 100%;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.25rem;
+        margin-top: 0.75rem;
+        padding-top: 0.75rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .nav-links.show-menu {
+        display: flex;
+    }
+
+    .nav-links a {
+        display: block;
+        width: 100%;
+        padding: 0.85rem 1rem;
+        background-color: rgba(255, 255, 255, 0.06);
+    }
+
+    .nav-links a:hover,
+    .nav-links a:focus {
+        background-color: var(--light-blue);
+    }
 }
 
 /* =========================
