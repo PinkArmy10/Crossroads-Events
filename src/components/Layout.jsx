@@ -1,4 +1,4 @@
-import { Outlet, Link } from "react-router-dom";
+import { Outlet, NavLink } from "react-router-dom";
 import { useState } from "react";
 import "./Layout.css";
 
@@ -47,16 +47,41 @@ function Layout() {
             className={`nav-links ${menuOpen ? "show-menu" : ""}`}
           >
             <li>
-              <Link to="/" onClick={closeMenu}>Home</Link>
+              <NavLink
+                to="/"
+                end
+                onClick={closeMenu}
+                className={({ isActive }) => isActive ? "nav-link active-link" : "nav-link"}
+              >
+                Home
+              </NavLink>
             </li>
             <li>
-              <Link to="/contact" onClick={closeMenu}>Contact</Link>
+              <NavLink
+                to="/contact"
+                onClick={closeMenu}
+                className={({ isActive }) => isActive ? "nav-link active-link" : "nav-link"}
+              >
+                Contact
+              </NavLink>
             </li>
             <li>
-              <Link to="/events" onClick={closeMenu}>Events</Link>
+              <NavLink
+                to="/events"
+                onClick={closeMenu}
+                className={({ isActive }) => isActive ? "nav-link active-link" : "nav-link"}
+              >
+                Events
+              </NavLink>
             </li>
             <li>
-              <Link to="/admin" onClick={closeMenu}>Admin</Link>
+              <NavLink
+                to="/admin"
+                onClick={closeMenu}
+                className={({ isActive }) => isActive ? "nav-link active-link" : "nav-link"}
+              >
+                Admin
+              </NavLink>
             </li>
           </ul>
         </div>

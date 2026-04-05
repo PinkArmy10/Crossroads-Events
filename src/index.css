@@ -63,32 +63,6 @@ body {
   justify-content: center;
 }
 
-.nav-links {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: none;
-}
-
-.nav-links.active {
-  display: block;
-}
-
-.nav-links a {
-  color: white;
-  text-decoration: none;
-  display: block;
-  padding: 1rem 1rem 1rem 0;
-  font-weight: 500;
-  min-height: 44px;
-  display: flex;
-  align-items: center;
-}
-
-.nav-links a:hover {
-  color: var(--sky-blue);
-}
-
 /* Event Form - Mobile First */
 .event-form-section {
   background: var(--white);
@@ -286,28 +260,12 @@ body {
     padding: 2rem;
   }
 
-  .nav-links {
-    display: flex;
-    gap: 1.5rem;
-  }
-
   .mobile-menu-toggle {
     display: none;
   }
 
   .announcement-grid {
     grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-  }
-}
-
-/* Touch Targets */
-@media (hover: none) and (pointer: coarse) {
-  button,
-  a,
-  .mobile-menu-toggle,
-  .nav-links a {
-    min-height: 48px;
-    min-width: 48px;
   }
 }
 
