@@ -138,6 +138,8 @@ function AddEventForm() {
         <p className="event-form-section__intro">
           Fill out the form below to send your event for review. New submissions
           are automatically marked as pending approval.
+          <br/>
+          <b>All fields are required.</b>
         </p>
       </div>
 
