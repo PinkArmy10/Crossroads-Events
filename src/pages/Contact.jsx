@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   addDoc,
   collection,
@@ -9,117 +9,92 @@ import {
 } from "firebase/firestore";
 import { db } from "../firebase";
 
-const staticResourceSections = [
+const staticStudyToolsLinks = [
   {
-    id: "ward",
-    title: "Ward",
-    description: "Local ward resources, schedules, and signups.",
-    links: [
-      {
-        label: "Crossroads Ward Page",
-        url: "https://local.churchofjesuschrist.org/en/units/us/in/crossroads-ward",
-      },
-      {
-        label: "Building Cleanup Signup Sheet",
-        url: "https://example.com/building-cleanup-signup",
-      },
-    ],
+    label: "The Church of Jesus Christ of Latter-day Saints",
+    url: "https://www.churchofjesuschrist.org/",
   },
   {
-    id: "ysa",
-    title: "YSA",
-    description: "Young single adult resources and local connections.",
-    links: [
-      {
-        label: "YSA Page",
-        url: "https://www.churchofjesuschrist.org/topics/young-single-adults",
-      },
-      {
-        label: "Stake YSA Page",
-        url: "https://example.com/stake-ysa",
-      },
-      {
-        label: "Single Adult Resources",
-        url: "https://www.churchofjesuschrist.org/topics/single-adults",
-      },
-    ],
+    label: "Come, Follow Me",
+    url: "https://www.churchofjesuschrist.org/study/come-follow-me",
   },
   {
-    id: "study",
-    title: "Study Tools",
-    description: "Church study and gospel learning resources.",
-    links: [
-      {
-        label: "Church of Jesus Christ",
-        url: "https://www.churchofjesuschrist.org/",
-      },
-      {
-        label: "Come, Follow Me",
-        url: "https://www.churchofjesuschrist.org/study/come-follow-me",
-      },
-    ],
-  },
-  {
-    id: "family-history",
-    title: "Family History",
-    description: "Temple and family history tools.",
-    links: [
-      {
-        label: "FamilySearch",
-        url: "https://www.familysearch.org/",
-      },
-      {
-        label: "Family History Church Page",
-        url: "https://www.churchofjesuschrist.org/topics/family-history",
-      },
-      {
-        label: "Family History Signup Sheet",
-        url: "https://example.com/family-history-signup",
-      },
-    ],
+    label: "Gospel Library",
+    url: "https://www.churchofjesuschrist.org/study/lib",
   },
 ];
 
 const sectionOptions = [
   { value: "ward", label: "Ward" },
-  { value: "ysa", label: "YSA / Single Adult" },
+  { value: "ysa", label: "YSA" },
+  { value: "single-adults", label: "Single Adults (SA)" },
   { value: "study", label: "Study Tools" },
   { value: "family-history", label: "Family History" },
 ];
+
+const sectionMeta = {
+  ward: {
+    title: "Ward",
+    description: "Ward pages, schedules, cleanup signups, and local resources.",
+  },
+  ysa: {
+    title: "YSA",
+    description: "Young single adult pages, events, and resources.",
+  },
+  "single-adults": {
+    title: "Single Adults (SA)",
+    description: "Single adult links, groups, signups, and support resources.",
+  },
+  study: {
+    title: "Study Tools",
+    description: "Official study tools from The Church of Jesus Christ of Latter-day Saints, plus approved added resources.",
+  },
+  "family-history": {
+    title: "Family History",
+    description: "FamilySearch, family history support, and related signup links.",
+  },
+};
 
 function Contact() {
   const leaders = [
     {
       title: "Executive Secretary",
-      name: "Brother Name Here",
-      email: "executivesecretary@example.com",
-      phone: "(317) 555-0101",
-      image: "https://via.placeholder.com/320x320?text=Executive+Secretary",
+      name: "Brother Liam Fordham",
+      email: "N/A",
+      phone: "(317) 473-7801",
+      image: "/images/Fordham.jpg",
     },
     {
       title: "Clerk",
-      name: "Brother Name Here",
-      email: "clerk@example.com",
-      phone: "(317) 555-0102",
-      image: "https://via.placeholder.com/320x320?text=Clerk",
+      name: "Brother Paul Scholl",
+      email: "plusone5272@sbcglobal.net",
+      phone: "(317) 908-5272",
+      image: "/images/Scholl.png",
     },
     {
       title: "Elders Quorum President",
-      name: "Brother Name Here",
-      email: "eldersquorum@example.com",
-      phone: "(317) 555-0103",
-      image: "https://via.placeholder.com/320x320?text=EQ+President",
+      name: "Brother Jeffrey Arnold",
+      email: "jsarnold85@gmail.com",
+      phone: "(317) 874-6847",
+      image: "/images/Arnold.jpg",
     },
     {
       title: "Relief Society President",
-      name: "Sister Name Here",
-      email: "reliefsociety@example.com",
-      phone: "(317) 555-0104",
-      image: "https://via.placeholder.com/320x320?text=RS+President",
+      name: "Sister Katherine Griesemer",
+      email: "kathygriesemer@yahoo.com",
+      phone: "(317) 903-7048",
+      image: "/images/Griesemer.png",
+    },
+    {
+      title: "Primary President",
+      name: "Sister Hannah Bradfield",
+      email: "hannah.l.orr@gmail.com",
+      phone: "(502) 640-2029",
+      image: "/images/Bradfield.jpg",
     },
   ];
 
-  const [approvedSuggestions, setApprovedSuggestions] = useState([]);
+  const [approvedLinks, setApprovedLinks] = useState([]);
   const [suggestionForm, setSuggestionForm] = useState({
     sectionId: "ward",
     title: "",
@@ -144,10 +119,10 @@ function Contact() {
           }))
           .filter((item) => item.status === "approved");
 
-        setApprovedSuggestions(items);
+        setApprovedLinks(items);
       },
       (error) => {
-        console.error("Error loading approved link suggestions:", error);
+        console.error("Error loading approved links:", error);
       }
     );
 
@@ -239,34 +214,48 @@ function Contact() {
     }
   }
 
-  const resourceSections = staticResourceSections.map((section) => {
-    const extraLinks = approvedSuggestions
-      .filter((item) => item.sectionId === section.id)
-      .map((item) => ({
-        label: item.title,
-        url: item.url,
-        suggested: true,
-      }));
+  const resourceSections = useMemo(() => {
+    const sectionIds = ["ward", "ysa", "single-adults", "study", "family-history"];
 
-    return {
-      ...section,
-      links: [...section.links, ...extraLinks],
-    };
-  });
+    return sectionIds.map((sectionId) => {
+      const firestoreLinks = approvedLinks
+        .filter((item) => item.sectionId === sectionId)
+        .map((item) => ({
+          id: item.id,
+          label: item.title,
+          url: item.url,
+        }));
+
+      const links =
+        sectionId === "study"
+          ? [...staticStudyToolsLinks, ...firestoreLinks]
+          : firestoreLinks;
+
+      return {
+        id: sectionId,
+        title: sectionMeta[sectionId].title,
+        description: sectionMeta[sectionId].description,
+        links,
+      };
+    });
+  }, [approvedLinks]);
 
   return (
     <section className="contact-page">
       <header className="contact-page__hero">
-        <h1>Contact & Resources</h1>
-        <p>Reach ward leadership and open helpful church links from one page.</p>
+        <h1>Ward Leadership Moderators</h1>
+        <p>
+          Contact ward leadership and review approved resources from
+          The Church of Jesus Christ of Latter-day Saints in one place.
+        </p>
       </header>
 
       <section className="contact-page__section">
         <div className="contact-page__section-header">
-          <h2>Ward Leadership</h2>
+          <h2>Leadership Contacts</h2>
           <p>
-            Contact the right person for scheduling, records, quorum support,
-            or Relief Society needs.
+            Reach the right leader for scheduling, records, quorum support,
+            Primary, or Relief Society needs.
           </p>
         </div>
 
@@ -306,10 +295,9 @@ function Contact() {
 
       <section className="contact-page__section">
         <div className="contact-page__section-header">
-          <h2>Helpful Links</h2>
+          <h2>Helpful Resource Links</h2>
           <p>
-            Resources are grouped so members can quickly find ward, YSA, study,
-            and family history links.
+            Browse approved ward, YSA, single adult, study, and family history resources.
           </p>
         </div>
 
@@ -321,20 +309,26 @@ function Contact() {
                 {section.description}
               </p>
 
-              <div className="resource-sub-links">
-                {section.links.map((link, index) => (
-                  <a
-                    key={`${section.id}-${link.label}-${index}`}
-                    href={link.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="resource-sub-link"
-                  >
-                    <span className="resource-sub-link__label">{link.label}</span>
-                    <span className="resource-sub-link__url">{link.url}</span>
-                  </a>
-                ))}
-              </div>
+              {section.links.length === 0 ? (
+                <p className="resource-section-card__empty">
+                  No approved links in this section yet.
+                </p>
+              ) : (
+                <div className="resource-sub-links">
+                  {section.links.map((link, index) => (
+                    <a
+                      key={`${section.id}-${link.label}-${index}`}
+                      href={link.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="resource-sub-link"
+                    >
+                      <span className="resource-sub-link__label">{link.label}</span>
+                      <span className="resource-sub-link__url">{link.url}</span>
+                    </a>
+                  ))}
+                </div>
+              )}
             </article>
           ))}
         </div>
@@ -344,8 +338,11 @@ function Contact() {
         <div className="contact-page__section-header">
           <h2>Suggest a Link</h2>
           <p>
-            Know a helpful ward, stake, YSA, or Church resource we should include?
-            Send it here for review.
+            Suggest approved resources for The Church of Jesus Christ of Latter-day Saints,
+            ward pages, YSA pages, single adult resources, signup sheets, study tools,
+            or family history links.
+            <br/>
+            <b>All fields are mandatory.</b>
           </p>
         </div>
 
@@ -353,10 +350,12 @@ function Contact() {
           <p>Helpful suggestions can include:</p>
           <ul>
             <li>Ward or stake pages.</li>
-            <li>YSA or single adult resources.</li>
+            <li>YSA resources.</li>
+            <li>Single adult resources.</li>
             <li>Signup sheets.</li>
             <li>Church study tools.</li>
             <li>Family history links.</li>
+            <li>Socials</li>
           </ul>
         </div>
 
@@ -385,7 +384,7 @@ function Contact() {
               type="text"
               value={suggestionForm.title}
               onChange={handleSuggestionChange}
-              placeholder="Example: Building Cleanup Signup"
+              placeholder="Example: Ward Building Cleanup Signup"
             />
           </label>
 
@@ -420,7 +419,7 @@ function Contact() {
               type="text"
               value={suggestionForm.submittedBy}
               onChange={handleSuggestionChange}
-              placeholder="Optional"
+              placeholder="Bill Smith"
             />
           </label>
 

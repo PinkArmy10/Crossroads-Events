@@ -1,6 +1,7 @@
 import { Outlet, NavLink } from "react-router-dom";
 import { useState } from "react";
 import "./Layout.css";
+import Footer from "./Footer";
 
 function Layout() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -93,6 +94,8 @@ function Layout() {
       <main className="page-content">
         <Outlet />
       </main>
+
+      <Footer />
     </>
   );
 }

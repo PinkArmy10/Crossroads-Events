@@ -9,9 +9,8 @@ const firebaseConfig = {
   storageBucket: "crossroads-announcements.firebasestorage.app",
   messagingSenderId: "574537748006",
   appId: "1:574537748006:web:95ec9aea961f66857860e7",
-  measurementId: "G-YBS0VGNN0E"
+  measurementId: "G-YBS0VGNN0E",
 };
-
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app, "crossroads-announcements");
