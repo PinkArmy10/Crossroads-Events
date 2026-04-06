@@ -76,6 +76,18 @@ function getStatusStyles(status) {
   return styles[status] || styles.pending;
 }
 
+function getSectionLabel(sectionId) {
+  const labels = {
+    ward: "Ward",
+    ysa: "YSA",
+    "single-adults": "Single Adults (SA)",
+    study: "Study Tools",
+    "family-history": "Family History",
+  };
+
+  return labels[sectionId] || "Unassigned";
+}
+
 function formatDateTime(dateTimeString) {
   if (!dateTimeString) return "Not provided";
 
@@ -108,12 +120,14 @@ function Admin() {
 
   const [pendingEvents, setPendingEvents] = useState([]);
   const [allEvents, setAllEvents] = useState([]);
+  const [pendingLinkSuggestions, setPendingLinkSuggestions] = useState([]);
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [lookupCode, setLookupCode] = useState("");
   const [lookupMessage, setLookupMessage] = useState("");
   const [actionMessage, setActionMessage] = useState("");
   const [loadingPending, setLoadingPending] = useState(true);
   const [loadingAllEvents, setLoadingAllEvents] = useState(true);
+  const [loadingSuggestions, setLoadingSuggestions] = useState(true);
   const [saving, setSaving] = useState(false);
   const [editForm, setEditForm] = useState(emptyForm);
 
@@ -156,6 +170,32 @@ function Admin() {
 
     return () => unsubscribe();
   }, [isAdmin]);
+
+  useEffect(() => {
+    const suggestionsRef = collection(db, "linkSuggestions");
+    const suggestionsQuery = query(suggestionsRef, orderBy("createdAt", "desc"));
+
+    const unsubscribe = onSnapshot(
+      suggestionsQuery,
+      (snapshot) => {
+        const items = snapshot.docs
+          .map((docSnap) => ({
+            id: docSnap.id,
+            ...docSnap.data(),
+          }))
+          .filter((item) => item.status === "pending");
+
+        setPendingLinkSuggestions(items);
+        setLoadingSuggestions(false);
+      },
+      (error) => {
+        console.error("Error loading link suggestions:", error);
+        setLoadingSuggestions(false);
+      }
+    );
+
+    return () => unsubscribe();
+  }, []);
 
   useEffect(() => {
     const safeLogout = async () => {
@@ -350,6 +390,35 @@ function Admin() {
     }
   }
 
+  async function handleApproveSuggestion(suggestionId) {
+    try {
+      await updateDoc(doc(db, "linkSuggestions", suggestionId), {
+        status: "approved",
+        reviewed: true,
+        reviewedBy: user?.email || "Unknown reviewer",
+        reviewedAt: serverTimestamp(),
+      });
+
+      setActionMessage("Link suggestion approved.");
+    } catch (error) {
+      console.error("Error approving suggestion:", error);
+      setActionMessage("There was a problem approving the link suggestion.");
+    }
+  }
+
+  async function handleDeleteSuggestion(suggestionId) {
+    const confirmed = window.confirm("Are you sure you want to delete this link suggestion?");
+    if (!confirmed) return;
+
+    try {
+      await deleteDoc(doc(db, "linkSuggestions", suggestionId));
+      setActionMessage("Link suggestion deleted.");
+    } catch (error) {
+      console.error("Error deleting suggestion:", error);
+      setActionMessage("There was a problem deleting the link suggestion.");
+    }
+  }
+
   const statusClass = `status-select ${getStatusClass(editForm.status)}`;
   const statusStyle = getStatusStyles(editForm.status);
 
@@ -363,9 +432,9 @@ function Admin() {
 
         <p className="admin-section-note">
           {isAdmin
-            ? "You can review, edit, approve, reject, request changes, delete events, and access the full event list."
+            ? "You can review, edit, approve, reject, request changes, delete events, and approve suggested links."
             : isModerator
-            ? "You can review, edit, approve, reject, and request changes for pending events."
+            ? "You can review, edit, approve, reject, request changes, and approve suggested links."
             : "No staff role found."}
         </p>
 
@@ -441,6 +510,61 @@ function Admin() {
                 </article>
               );
             })}
+          </div>
+        )}
+      </section>
+
+      <section className="event-form-section">
+        <h3>Pending Link Suggestions</h3>
+        <p className="admin-section-note">
+          Review suggested resource links before adding them to the Contact page.
+        </p>
+
+        {loadingSuggestions ? (
+          <p>Loading link suggestions...</p>
+        ) : pendingLinkSuggestions.length === 0 ? (
+          <p>No pending link suggestions right now.</p>
+        ) : (
+          <div className="announcement-grid">
+            {pendingLinkSuggestions.map((item) => (
+              <article key={item.id} className="announcement-card">
+                <div className="admin-status-strip pending">Pending Review</div>
+
+                <h4 className="announcement-card__title">
+                  {item.title || "Untitled Link"}
+                </h4>
+
+                <div className="announcement-card__details">
+                  <p><strong>Section:</strong> {getSectionLabel(item.sectionId)}</p>
+                  <p>
+                    <strong>URL:</strong>{" "}
+                    <a href={item.url} target="_blank" rel="noopener noreferrer">
+                      {item.url}
+                    </a>
+                  </p>
+                  <p><strong>Why:</strong> {item.reason || "Not provided"}</p>
+                  <p><strong>Submitted By:</strong> {item.submittedBy || "Anonymous"}</p>
+                </div>
+
+                <div className="admin-actions-row">
+                  <button
+                    type="button"
+                    className="admin-primary-btn"
+                    onClick={() => handleApproveSuggestion(item.id)}
+                  >
+                    Approve Link
+                  </button>
+
+                  <button
+                    type="button"
+                    className="admin-danger-btn"
+                    onClick={() => handleDeleteSuggestion(item.id)}
+                  >
+                    Delete
+                  </button>
+                </div>
+              </article>
+            ))}
           </div>
         )}
       </section>

@@ -296,3 +296,12 @@
     grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 }
+
+.resource-section-card__empty {
+  margin: 0;
+  padding: 0.9rem 1rem;
+  border-radius: 12px;
+  background: #f8fafc;
+  border: 1px dashed #cbd5e1;
+  color: #64748b;
+}
