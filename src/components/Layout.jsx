@@ -70,6 +70,16 @@ function Layout() {
 
             <li>
               <NavLink
+                to="/serve"
+                onClick={closeMenu}
+                className={({ isActive }) => isActive ? "nav-link active-link" : "nav-link"}
+              >
+                Serve
+              </NavLink>
+            </li>
+
+            <li>
+              <NavLink
                 to="/contact"
                 onClick={closeMenu}
                 className={({ isActive }) => isActive ? "nav-link active-link" : "nav-link"}

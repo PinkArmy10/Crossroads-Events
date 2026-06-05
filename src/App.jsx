@@ -6,6 +6,8 @@ import Events from "./pages/Events";
 import Admin from "./pages/Admin";
 import Login from "./pages/Login";
 import AdminRoute from "./components/AdminRoute";
+import Serve from "./pages/Serve";
+import CleaningSignup from "./pages/CleaningSignup";
 
 function App() {
   return (
@@ -23,6 +25,8 @@ function App() {
             </AdminRoute>
           }
         />
+        <Route path="serve" element={<Serve />} />
+        <Route path="serve/cleaning" element={<CleaningSignup />} />
       </Route>
     </Routes>
   );
